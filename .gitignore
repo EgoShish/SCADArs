@@ -1,1 +1,61 @@
-/target
+# ==========================================
+# Rust & Cargo
+# ==========================================
+target/
+debug/
+**/*.rs.bk
+*.pdb
+rust-project.json
+
+# ПРИМЕЧАНИЕ: Cargo.lock
+# Для бинарных приложений (TUI, Server) Cargo.lock обычно ОСТАВЛЯЮТ в Git, 
+# чтобы сборки были 100% воспроизводимы. Если хотите его игнорировать, расскоментируйте строку ниже:
+# Cargo.lock
+
+# ==========================================
+# Windows
+# ==========================================
+# Служебные файлы проводника и системные дампы
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+[Nn]et[Cc]ache/
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.stackdump
+
+# ==========================================
+# Linux
+# ==========================================
+# Временные файлы и превью
+*~
+.trash/
+.directory
+.fuse_hidden*
+.nfs*
+
+# ==========================================
+# Редакторы и IDE (VS Code, JetBrains / RustRover)
+# ==========================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+*.vsix
+
+# JetBrains (RustRover / CLion / IntelliJ)
+.idea/
+*.iml
+
+# ==========================================
+# macOS (Оставляем для совместимости)
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
