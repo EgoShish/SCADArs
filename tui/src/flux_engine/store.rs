@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use circular_queue::CircularQueue;
-use comms::event;
+use comms::action;
 
 #[derive(Debug, Clone)]
 pub enum MessageBoxItem {
@@ -87,29 +87,29 @@ impl Default for Store {
 }
 
 impl Store {
-    pub fn handle_server_event(&mut self, event: &event::Event) {
-        match event {
-            event::Event::LoginSuccessful(event) => {
-                self.user_id = event.user_id.clone();
-                self.room_data_map = event
+    pub fn handle_server_action(&mut self, action: &Action) {
+        match action {
+            Action::LoginSuccessful(action) => {
+                self.user_id = action.user_id.clone();
+                self.room_data_map = action
                     .rooms
                     .clone()
                     .into_iter()
                     .map(|r| (r.name.clone(), RoomData::new(r.name, r.description)))
                     .collect();
             }
-            event::Event::RoomParticipation(event) => {
-                if let Some(room_data) = self.room_data_map.get_mut(&event.room) {
-                    match event.status {
-                    event::RoomParticipationStatus::Joined => {
-                        room_data.users.insert(event.user_id.clone());
-                            if event.user_id == self.user_id {
+            Action::RoomParticipation(action) => {
+                if let Some(room_data) = self.room_data_map.get_mut(&action.room) {
+                    match action.status {
+                    action::RoomParticipationStatus::Joined => {
+                        room_data.users.insert(action.user_id.clone());
+                            if action.user_id == self.user_id {
                                 room_data.has_joined = true;
                             }
                     }
-                    event::RoomParticipationStatus::Left => {
-                            room_data.users.remove(&event.user_id);
-                            if event.user_id == self.user_id {
+                    action::RoomParticipationStatus::Left => {
+                            room_data.users.remove(&action.user_id);
+                            if action.user_id == self.user_id {
                                 room_data.has_joined = false;
                             }
                         }
@@ -118,10 +118,10 @@ impl Store {
                         .messages
                         .push(MessageBoxItem::Notification(format!(
                             "{} только что {}",
-                            event.user_id,
-                            match event.status {
-                                event::RoomParticipationStatus::Joined => "был добавлен в комнату",
-                                event::RoomParticipationStatus::Left => "вышел из комнаты",
+                            action.user_id,
+                            match action.status {
+                                action::RoomParticipationStatus::Joined => "был добавлен в комнату",
+                                action::RoomParticipationStatus::Left => "вышел из комнаты",
                             }
                         )));
                 }
@@ -129,23 +129,23 @@ impl Store {
                     println("Error RoomParticipation have None Option room_data_map");
                 }
             }
-            event::Event::UserJoinedRoom(event) => {
-                if let Some(room_data) = self.room_data_map.get_mut(&event.room) {
-                    room_data.users = event.users.clone().into_iter().collect();
+            action::action::UserJoinedRoom(action) => {
+                if let Some(room_data) = self.room_data_map.get_mut(&action.room) {
+                    room_data.users = action.users.clone().into_iter().collect();
                 }
                 else {
                     println("Error UserJoinedRoom have None Option room_data_map");
                 }
             }
-            event::Event::UserMessage(event) => {
-                if let Some(room_data) = self.room_data_map.get_mut(&event.room) {
+            action::action::UserMessage(action) => {
+                if let Some(room_data) = self.room_data_map.get_mut(&action.room) {
                     room_data.messages.push(MessageBoxItem::Message {
-                        user_id: event.user_id.clone(),
-                        content: event.content.clone(),
+                        user_id: action.user_id.clone(),
+                        content: action.content.clone(),
                     });
                 }
                 if let Some(active_room) = self.active_room.as_ref() {
-                    if !active_room.eq(&event.room) {
+                    if !active_room.eq(&action.room) {
                         room_data.has_unread = true;
                     }
                 }
