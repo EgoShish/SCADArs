@@ -17,6 +17,7 @@ impl Terminator {
     pub fn new(interrupt_tx: broadcast::Sender<Interrupted>) -> Self {
         Self { interrupt_tx }
     }
+
     pub fn terminate(&mut self, interrupted: Interrupted) -> anyhow::Result<()> {
         self.interrupt_tx.send(interrupted)?;
 
