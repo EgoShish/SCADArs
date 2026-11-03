@@ -128,3 +128,38 @@ impl Component for InputBox {
         }
     }
 }
+
+pub struct RenderProps {
+    pub title: String,
+    pub area: Rect,
+    pub border_color: Color,
+    pub show_cursor: bool,
+}
+
+impl ComponentRender<RenderProps> for InputBox {
+    fn render<B: Backend>(&self, frame: &mut Frame<B>, 
+    	props: RenderProps) {
+        let input = Paragraph::new(self.text.as_str())
+            .style(Style::default().fg(Color::Yellow))
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .fg(props.border_color)
+                    .title(props.title),
+            );
+        frame.render_widget(input, props.area);
+
+        // Cursor is hidden by default, so we need to make it visible if the input box is selected
+        if props.show_cursor {
+            // Make the cursor visible and ask ratatui to put it at the specified coordinates after
+            // rendering
+            frame.set_cursor(
+                // Draw the cursor at the current position in the input field.
+                // This position is can be controlled via the left and right arrow key
+                props.area.x + self.cursor_position as u16 + 1,
+                // Move one line down, from the border to the input line
+                props.area.y + 1,
+            )
+        }
+    }
+}

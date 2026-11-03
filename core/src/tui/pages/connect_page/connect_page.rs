@@ -5,8 +5,8 @@ use tokio::sync::mpsc::UnboundedSender;
 use crate::state_store::ServerConnectionStatus;
 use crate::state_store::{action::Action, State};
 
-use crate::ui_management::components::input_box;
-use crate::ui_management::components::{input_box::InputBox, Component, ComponentRender};
+use crate::tui::components::input_box;
+use crate::tui::components::{input_box::InputBox, Component, ComponentRender};
 
 struct Props {
     error_message: Option<String>,

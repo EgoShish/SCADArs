@@ -18,7 +18,7 @@ use super::{
         SectionActivation,
     },
 };
-use crate::ui_management::components::{Component, ComponentRender};
+use crate::tui::components::{Component, ComponentRender};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Section {
@@ -454,5 +454,42 @@ impl ComponentRender<()> for ChatPage {
             .block(Block::default().borders(Borders::ALL)
             .title("Usage"));
         frame.render_widget(usage, container_usage);
+    }
+}
+
+
+impl HasUsageInfo for ChatPage {
+    fn usage_info(&self) -> UsageInfo {
+        if let Some(section) = self.active_section.as_ref() {
+            let handler: &dyn HasUsageInfo = match section {
+                Section::RoomList => &self.room_list,
+                Section::MessageInput => &self.message_input_box,
+            };
+
+            handler.usage_info()
+        } else {
+            UsageInfo {
+                description: Some("Select a widget".into()),
+                lines: vec![
+                    UsageInfoLine {
+                        keys: vec!["q".into()],
+                        description: "to exit".into(),
+                    },
+                    UsageInfoLine {
+                        keys: vec!["←".into(), "→".into()],
+                        description: "to hover widgets".into(),
+                    },
+                    UsageInfoLine {
+                        keys: vec!["e".into()],
+                        description: format!(
+                            "to activate {}",
+                            self.get_component_for_section(
+                            	&self.last_hovered_section)
+                                .name()
+                        ),
+                    },
+                ],
+            }
+        }
     }
 }

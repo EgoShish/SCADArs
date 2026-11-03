@@ -18,7 +18,7 @@ use tokio_stream::StreamExt;
 
 use crate::{
     state_store::{action::Action, State},
-    ui_management::components::{Component, ComponentRender},
+    tui::components::{Component, ComponentRender},
     Interrupted,
 };
 

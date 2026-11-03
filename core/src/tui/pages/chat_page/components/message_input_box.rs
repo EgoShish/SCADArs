@@ -7,13 +7,13 @@ use ratatui::{
 use tokio::sync::mpsc::UnboundedSender;
 
 use super::super::section::usage::{HasUsageInfo, UsageInfo, UsageInfoLine};
-use crate::ui_management::components::{
+use crate::tui::components::{
     input_box::{self, InputBox},
     Component, ComponentRender,
 };
 use crate::{
     state_store::{action::Action, State},
-    ui_management::pages::chat_page::section::SectionActivation,
+    tui::pages::chat_page::section::SectionActivation,
 };
 
 struct Props {

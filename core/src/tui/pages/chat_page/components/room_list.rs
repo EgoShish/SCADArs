@@ -12,10 +12,10 @@ use super::super::section::usage::{HasUsageInfo,
 	UsageInfo, UsageInfoLine};
 use crate::{
     state_store::{action::Action, State},
-    ui_management::pages::chat_page::section::SectionActivation,
+    tui::pages::chat_page::section::SectionActivation,
 };
 
-use crate::ui_management::components::{Component, ComponentRender};
+use crate::tui::components::{Component, ComponentRender};
 
 pub struct RoomState {
     pub name: String,
